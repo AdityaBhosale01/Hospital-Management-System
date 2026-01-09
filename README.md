@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Hospital Management System
 
 A Flask-based web application that manages hospital operations such as patient registration, doctor management, appointments, and authentication.  
@@ -126,3 +127,6 @@ BTech CSE — Hospital Management System Project
 Feel free to reach out for improvements or collaboration.
 
 ---
+=======
+# Hospital-Management-System
+>>>>>>> 58e0d73e593825739c1e235529d456f27d754f60
