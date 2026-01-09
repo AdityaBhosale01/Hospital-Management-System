@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Patient History{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user"></i> Patient Profile</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ patient.name }}</p>
+                <p><strong>Email:</strong> {{ patient.email }}</p>
+                <p><strong>Age:</strong> {{ patient.age or 'N/A' }}</p>
+                <p><strong>Gender:</strong> {{ patient.gender or 'N/A' }}</p>
+                <p><strong>Blood Group:</strong> {{ patient.blood_group or 'N/A' }}</p>
+                <p><strong>Contact:</strong> {{ patient.contact or 'N/A' }}</p>
+                <p><strong>Emergency:</strong> {{ patient.emergency_contact or 'N/A' }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history"></i> Treatment History</h5>
+            </div>
+            <div class="card-body">
+                {% if history %}
+                    {% for record in history %}
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between">
+                                <span><strong>{{ record.appointment_date }}</strong> at {{ record.appointment_time }}</span>
+                                <span class="badge 
+                                    {% if record.status == 'Completed' %}bg-success
+                                    {% elif record.status == 'Booked' %}bg-info
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ record.status }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if record.diagnosis %}
+                            <p><strong>Diagnosis:</strong><br>{{ record.diagnosis }}</p>
+                            {% endif %}
+                            
+                            {% if record.prescription %}
+                            <p><strong>Prescription:</strong><br>{{ record.prescription }}</p>
+                            {% endif %}
+                            
+                            {% if record.notes %}
+                            <p><strong>Notes:</strong><br>{{ record.notes }}</p>
+                            {% endif %}
+                            
+                            {% if record.follow_up_date %}
+                            <p><strong>Follow-up Date:</strong> {{ record.follow_up_date }}</p>
+                            {% endif %}
+                            
+                            {% if not record.diagnosis and not record.prescription %}
+                            <p class="text-muted">No treatment details recorded.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p class="text-muted">No treatment history found for this patient.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="{{ url_for('doctor.appointments') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Appointments
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-user"></i> Patient Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="stat-card">
+            <div class="icon text-primary"><i class="fas fa-calendar"></i></div>
+            <div class="number">{{ total_appointments }}</div>
+            <div class="label">Total Appointments</div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="stat-card">
+            <div class="icon text-success"><i class="fas fa-check-circle"></i></div>
+            <div class="number">{{ completed_appointments }}</div>
+            <div class="label">Completed</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Upcoming Appointments</h5>
+    </div>
+    <div class="card-body">
+        {% if upcoming_appointments %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Doctor</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in upcoming_appointments %}
+                    <tr>
+                        <td>{{ apt.appointment_date }}</td>
+                        <td>{{ apt.appointment_time }}</td>
+                        <td>{{ apt.doctor_name }}</td>
+                        <td>{{ apt.dept_name }}</td>
+                        <td><span class="badge bg-info">{{ apt.status }}</span></td>
+                        <td>
+                            <a href="{{ url_for('patient.cancel_appointment', appointment_id=apt.appointment_id) }}" 
+                               class="btn btn-sm btn-danger" 
+                               onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-3">No upcoming appointments.</p>
+        <a href="{{ url_for('patient.book_appointment') }}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Book an Appointment
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-stethoscope"></i> Quick Actions</h5>
+    </div>
+    <div class="card-body">
+        <a href="{{ url_for('patient.book_appointment') }}" class="btn btn-primary me-2">
+            <i class="fas fa-calendar-plus"></i> Book Appointment
+        </a>
+        <a href="{{ url_for('patient.doctors') }}" class="btn btn-info me-2">
+            <i class="fas fa-user-md"></i> Find Doctors
+        </a>
+        <a href="{{ url_for('patient.history') }}" class="btn btn-secondary me-2">
+            <i class="fas fa-history"></i> View History
+        </a>
+        <a href="{{ url_for('patient.edit_profile') }}" class="btn btn-warning">
+            <i class="fas fa-user-edit"></i> Edit Profile
+        </a>
+    </div>
+</div>
+{% endblock %}

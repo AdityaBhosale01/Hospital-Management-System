@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Medical History{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-history"></i> My Medical History</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Completed Appointments & Treatments</h5>
+    </div>
+    <div class="card-body">
+        {% if history %}
+            {% for record in history %}
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h6 class="mb-0">
+                                <i class="fas fa-calendar"></i> {{ record.appointment_date }} at {{ record.appointment_time }}
+                            </h6>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <span class="badge bg-success">{{ record.status }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-user-md"></i> Doctor:</strong> {{ record.doctor_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-stethoscope"></i> Specialization:</strong> {{ record.specialization }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if record.diagnosis %}
+                    <div class="alert alert-info">
+                        <strong><i class="fas fa-diagnoses"></i> Diagnosis:</strong><br>
+                        {{ record.diagnosis }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if record.prescription %}
+                    <div class="alert alert-success">
+                        <strong><i class="fas fa-pills"></i> Prescription:</strong><br>
+                        {{ record.prescription }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if record.notes %}
+                    <div class="alert alert-warning">
+                        <strong><i class="fas fa-notes-medical"></i> Treatment Notes:</strong><br>
+                        {{ record.notes }}
+                    </div>
+                    {% endif %}
+                    
+                    {% if record.follow_up_date %}
+                    <p><strong><i class="fas fa-calendar-check"></i> Follow-up Date:</strong> 
+                       <span class="badge bg-primary">{{ record.follow_up_date }}</span>
+                    </p>
+                    {% endif %}
+                    
+                    {% if not record.diagnosis and not record.prescription and not record.notes %}
+                    <p class="text-muted"><i>No treatment details recorded for this appointment.</i></p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No medical history available yet. 
+            Your completed appointments will appear here.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

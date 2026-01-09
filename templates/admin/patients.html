@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Patients{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-users"></i> Manage Patients</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin.patients') }}">
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" name="search" 
+                           placeholder="Search by name, patient ID, or contact..." 
+                           value="{{ search }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Patients List</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                        <th>Blood Group</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.patient_id }}</td>
+                        <td>{{ patient.name }}</td>
+                        <td>{{ patient.email }}</td>
+                        <td>{{ patient.age or 'N/A' }}</td>
+                        <td>{{ patient.gender or 'N/A' }}</td>
+                        <td>{{ patient.contact or 'N/A' }}</td>
+                        <td>{{ patient.blood_group or 'N/A' }}</td>
+                        <td>
+                            {% if patient.status == 'active' %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger">Blacklisted</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_patient', patient_id=patient.patient_id) }}" 
+                               class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            {% if patient.status == 'active' %}
+                            <a href="{{ url_for('admin.delete_patient', patient_id=patient.patient_id) }}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to blacklist this patient?')">
+                                <i class="fas fa-ban"></i> Blacklist
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">No patients found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

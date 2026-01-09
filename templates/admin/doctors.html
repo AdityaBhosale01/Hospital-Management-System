@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Doctors{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-user-md"></i> Manage Doctors</h2>
+    <a href="{{ url_for('admin.add_doctor') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Doctor
+    </a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin.doctors') }}">
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" name="search" 
+                           placeholder="Search by name or specialization..." 
+                           value="{{ search }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Doctors List</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Specialization</th>
+                        <th>Department</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.doctor_id }}</td>
+                        <td>{{ doctor.name }}</td>
+                        <td>{{ doctor.email }}</td>
+                        <td>{{ doctor.specialization }}</td>
+                        <td>{{ doctor.dept_name or 'N/A' }}</td>
+                        <td>{{ doctor.contact or 'N/A' }}</td>
+                        <td>
+                            {% if doctor.status == 'active' %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger">Blacklisted</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_doctor', doctor_id=doctor.doctor_id) }}" 
+                               class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            {% if doctor.status == 'active' %}
+                            <a href="{{ url_for('admin.delete_doctor', doctor_id=doctor.doctor_id) }}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to blacklist this doctor?')">
+                                <i class="fas fa-ban"></i> Blacklist
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No doctors found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

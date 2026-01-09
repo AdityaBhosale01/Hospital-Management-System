@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="stat-card">
+            <div class="icon text-primary"><i class="fas fa-user-md"></i></div>
+            <div class="number">{{ doctors_count }}</div>
+            <div class="label">Total Doctors</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stat-card">
+            <div class="icon text-success"><i class="fas fa-users"></i></div>
+            <div class="number">{{ patients_count }}</div>
+            <div class="label">Total Patients</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="stat-card">
+            <div class="icon text-info"><i class="fas fa-calendar-check"></i></div>
+            <div class="number">{{ appointments_count }}</div>
+            <div class="label">Total Appointments</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-calendar"></i> Recent Appointments</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in recent_appointments %}
+                    <tr>
+                        <td>{{ apt.appointment_date }}</td>
+                        <td>{{ apt.appointment_time }}</td>
+                        <td>{{ apt.patient_name }}</td>
+                        <td>{{ apt.doctor_name }}</td>
+                        <td>{{ apt.specialization }}</td>
+                        <td>
+                            {% if apt.status == 'Booked' %}
+                                <span class="badge bg-info">{{ apt.status }}</span>
+                            {% elif apt.status == 'Completed' %}
+                                <span class="badge bg-success">{{ apt.status }}</span>
+                            {% elif apt.status == 'Cancelled' %}
+                                <span class="badge bg-danger">{{ apt.status }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ apt.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No recent appointments</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

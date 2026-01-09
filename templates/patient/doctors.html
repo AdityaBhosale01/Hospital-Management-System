@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Find Doctors{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-user-md"></i> Find Doctors</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('patient.doctors') }}">
+            <div class="row">
+                <div class="col-md-10">
+                    <select class="form-select" name="dept_id">
+                        <option value="">All Departments</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept.dept_id }}" {% if selected_dept == dept.dept_id %}selected{% endif %}>
+                            {{ dept.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for doctor in doctors %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ doctor.name }}</h5>
+                <p class="card-text">
+                    <strong><i class="fas fa-stethoscope"></i> Specialization:</strong> {{ doctor.specialization }}<br>
+                    <strong><i class="fas fa-hospital"></i> Department:</strong> {{ doctor.dept_name or 'N/A' }}<br>
+                    <strong><i class="fas fa-graduation-cap"></i> Qualification:</strong> {{ doctor.qualification or 'N/A' }}<br>
+                    <strong><i class="fas fa-briefcase"></i> Experience:</strong> {{ doctor.experience or 0 }} years<br>
+                    <strong><i class="fas fa-phone"></i> Contact:</strong> {{ doctor.contact or 'N/A' }}<br>
+                    <strong><i class="fas fa-calendar-check"></i> Available Days:</strong> {{ doctor.available_days }}
+                </p>
+                <a href="{{ url_for('patient.doctor_availability', doctor_id=doctor.doctor_id) }}" 
+                   class="btn btn-primary">
+                    <i class="fas fa-clock"></i> View Availability
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            No doctors found. Please try a different filter.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
